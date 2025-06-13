@@ -1,0 +1,770 @@
+% building on poster template, Ty Stanford 2015-08-21
+
+% \documentclass[a2,landscape]{a0poster}
+\documentclass[a2,portrait]{a0poster}
+%a2,a1,a0 are all possible
+
+\usepackage[absolute]{textpos}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{fancybox}
+\usepackage{fancyvrb}
+\usepackage[utf8]{inputenc}
+\usepackage[scaled=.8]{beramono}
+\usepackage[T1]{fontenc}
+\usepackage{array}
+\usepackage{dsfont}
+\usepackage{amsmath,enumerate,amssymb,amsthm}
+% \usepackage{bm}
+% \usepackage{varioref}
+% \usepackage[sort&compress]{natbib}
+\usepackage{enumitem}
+% \usepackage{pagecolor}% http://ctan.org/pkg/pagecolor
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% packages options %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setenumerate[1]{label=(\arabic*)}
+% \bibpunct{[}{]}{;}{s}{,}{,}
+% \def\bibfont{\footnotesize}
+\usetikzlibrary{arrows,arrows.meta}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% general settings %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\pagestyle{empty}
+\renewcommand*{\familydefault}{\sfdefault}
+
+\parindent=0pt
+\parskip=0.5\baselineskip
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% grid for poster %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\TPGrid[10mm,10mm]{4}{100}      % 4 cols and 100 rows, 
+% \TPGrid[10mm,10mm]{5}{100}      % 5 cols and 100 rows, 
+\TPMargin{10mm}                % 10mm inside each grid the boxes are formed
+\setlength{\TPboxrulesize}{4pt}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% colour defns (add as req) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\definecolor{pinkishoffwhite}{rgb}{0.950,0.869,0.753}
+\definecolor{redmaroon}{rgb}{0.451,0.086,0.088}
+\definecolor{uniblue}{rgb}{0.157,0.322,0.614}
+\definecolor{midgrey}{rgb}{0.220,0.220,0.251}
+
+\definecolor{tgreen}{RGB}{93,158,164}
+\definecolor{purp}{RGB}{128,71,119}
+\definecolor{softblue}{RGB}{66,123,161}
+\definecolor{darknav}{RGB}{10,17,57}
+
+\definecolor{hotorange}{HTML}{FF5900}
+\definecolor{redpurp}{HTML}{3E033D}
+\definecolor{purpprup}{HTML}{820082}
+\definecolor{dulldarkblue}{HTML}{00003D}
+
+\definecolor{blu}{HTML}{4F8FE3}
+\definecolor{gre}{HTML}{208E38}
+\definecolor{ora}{HTML}{FF6600}
+\definecolor{blutuu}{HTML}{3A4989}
+
+\definecolor{orabro}{HTML}{FF4000}
+\definecolor{pinbro}{HTML}{BF0449}
+\definecolor{brotwo}{HTML}{7E1E00}
+\definecolor{bro}{HTML}{400000}
+
+\definecolor{greagain}{HTML}{42594A}
+\definecolor{redagain}{HTML}{D91A1A}
+\definecolor{yel}{HTML}{F2BF27}
+\definecolor{blugredark}{HTML}{233C50}
+
+\definecolor{cyanish}{HTML}{47D2FF}
+\definecolor{midgrey}{rgb}{0.220,0.220,0.251}
+\definecolor{redas}{HTML}{F11A22}
+\definecolor{darkblu}{HTML}{2B115A}
+
+%\definecolor{}{HTML}{}
+%\definecolor{}{HTML}{}
+%\definecolor{}{HTML}{}
+%\definecolor{}{HTML}{}
+
+
+
+%%%%%%%%%%%%%%%%%%%% !!! set these to change colours of poster !!! %%%%%%%%%%%%%%%%%
+
+%% background colour, horizontal lines around title
+\newcommand{\csone}{blu}
+
+%% author text colour, \Head (text heading) title colour, box type 1 outline colour
+\newcommand{\cstwo}{orabro}
+
+%% box type 2 outline colour, \Subhead (sub heading) text colour
+\newcommand{\csthr}{redmaroon}
+
+%% poster title colour, text colour in boxes
+\newcommand{\csfou}{black!90}         
+
+
+
+
+%%%%%%%%%%%%%%%%%%%% !!! change these too as req !!! %%%%%%%%%%%%%%%%%
+
+
+
+% \newcommand{\titletxt}{Title text that is likely to go over two lines but re-position as required if only one line}
+% \newcommand{\personone}{x}
+% \newcommand{\persontwo}{y}
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% colour scheme commands %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+% \pagecolor{\csone!10}
+\newcommand{\textcsone}[1]{\textcolor{\csone}{#1}}
+\newcommand{\textcstwo}[1]{\textcolor{\cstwo}{#1}}
+\newcommand{\textcsthr}[1]{\textcolor{\csthr}{#1}}
+\newcommand{\textcsfou}[1]{\textcolor{\csfou}{#1}}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% insert user commands here %%%%%%%%%%%%%%%%%%%
+
+
+\newcommand{\bcen}{\begin{center}}
+\newcommand{\ecen}{\end{center}}
+\newcommand{\bfr}{\begin{flushright}}
+\newcommand{\efr}{\end{flushright}}
+\newcommand{\bfl}{\begin{flushleft}}
+\newcommand{\efl}{\end{flushleft}}
+
+\newcommand{\benum}{\begin{enumerate}}
+\newcommand{\eenum}{\end{enumerate}}
+\newcommand{\bit}{\begin{itemize}[label={\color{\csthr}\textbullet}]\itemsep-1pt}
+\newcommand{\eit}{\end{itemize}}
+
+\newcommand{\spacebull}{\textcsthr{\textbullet}}
+
+\newcommand{\Head}[1]{\noindent{\large\textcstwo{#1}}\bigskip}
+\newcommand{\Subhead}[1]{\noindent{\textcsthr{#1}}}
+\newcommand{\inserttitle}[1]{\textcsfou{\textbf{{\veryHuge #1}}}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% boxes and such %%%%%%%%%%%%%%%%%%%
+
+
+
+\tikzstyle{boxonetemplate} = [draw=\csone, fill=\csone!15, ultra thick,
+	rectangle, rounded corners, inner sep=10pt, inner ysep=10pt]
+    
+\tikzstyle{boxtwotemplate} = [draw=\cstwo, fill=\cstwo!10, ultra thick,
+rectangle, rounded corners, inner sep=10pt, inner ysep=10pt]
+
+\tikzstyle{boxthrtemplate} = [draw=\csthr, fill=\csthr!10, ultra thick,
+	rectangle, rounded corners, inner sep=10pt, inner ysep=10pt]
+
+\newcommand{\boxone}[3]{%
+\vskip3pt%
+\begin{tikzpicture}\node[boxonetemplate](box){%
+\begin{minipage}{#3\textwidth}%
+\bfr\large{\textbf{\textsf{\textcsfou{#1}}}}\efr\vspace{-20pt}
+\color{\csthr}{\rule{\textwidth}{0.5mm}}
+\textcsfou{#2}
+\end{minipage}%
+};\end{tikzpicture}%
+\vskip3pt%
+}
+
+
+\newcommand{\boxtwo}[3]{%
+\vskip3pt%
+\begin{tikzpicture}%
+\node[boxtwotemplate](box){%
+\begin{minipage}{#3\textwidth}%
+\bfr\textbf{\textcsfou{#1}}\efr\vspace{-12pt}
+\textcsfou{#2}
+\end{minipage}%
+};\end{tikzpicture}%
+\vskip3pt%
+}
+
+\newcommand{\boxonent}[2]{%
+\vskip3pt%
+\begin{tikzpicture}%
+\node[boxonetemplate](box){%
+\begin{minipage}{#2\textwidth}%
+% \bfr\textbf{\textcsfou{#1}}\efr\vspace{-12pt}
+\small\textcsfou{#1}
+\end{minipage}%
+};\end{tikzpicture}%
+\vskip3pt%
+}
+
+\newcommand{\boxtwont}[2]{%
+\vskip3pt%
+\begin{tikzpicture}%
+\node[boxtwotemplate](box){%
+\begin{minipage}{#2\textwidth}%
+% \bfr\textbf{\textcsfou{#1}}\efr\vspace{-12pt}
+\small\textcsfou{#1}
+\end{minipage}%
+};\end{tikzpicture}%
+\vskip3pt%
+}
+
+\newcommand{\boxthrnt}[2]{%
+\vskip3pt%
+\begin{tikzpicture}%
+\node[boxthrtemplate](box){%
+\begin{minipage}{#2\textwidth}%
+% \bfr\textbf{\textcsfou{#1}}\efr\vspace{-12pt}
+\small\textcsfou{#1}
+\end{minipage}%
+};\end{tikzpicture}%
+\vskip3pt%
+}
+
+\newcommand{\quickboxone}[4]{%
+\begin{textblock}{#3}(#1,#2)%
+\boxonent{#4}{#3}%
+\end{textblock}
+}
+
+\newcommand{\quickboxtwo}[4]{%
+\begin{textblock}{#3}(#1,#2)%
+\boxtwont{#4}{#3}%
+\end{textblock}
+}
+
+
+\newcommand{\quickboxthr}[4]{%
+\begin{textblock}{#3}(#1,#2)%
+\boxthrnt{#4}{#3}%
+\end{textblock}
+}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% arrows and lines %%%%%%%%%%%%%%%%%%%
+
+
+% requires tikz >= 3.0.0
+% also the previous declaration: \usetikzlibrary{arrows,arrows.meta}
+% \tikzset{
+%   double arrow/.style args={#1}{
+%     % -triangle 60,
+%     line width=2,\csone % first arrow
+%     % postaction={draw,-triangle 60,\cstwo!50,line width=1/4,
+%     % shorten <=(#1)/1.2,
+%     % shorten >=2*(#1)/1.2} % second arrow
+%   }
+% }
+
+
+\newcommand{\downarrowalg}[3]{%
+\begin{textblock}{1}(#1,#2)
+\begin{center}
+\begin{tikzpicture}
+\tikzstyle{arrow} = [thick,-,#3!80]
+\draw[arrow]
+		(0,0) coordinate -- (0,2) coordinate
+    node[pos=0.5,inner sep=0pt]{\textcolor{#3!80}{{\footnotesize $\vee$}}};
+% \node[right] at (0.8,0.8) {\textcsthr{#3}};
+\end{tikzpicture}
+% \vspace{-20pt}
+\end{center}
+\end{textblock}
+}
+
+
+\newcommand{\uparrowalg}[3]{%
+\begin{textblock}{1}(#1,#2)
+\begin{center}
+\begin{tikzpicture}
+\tikzstyle{arrow} = [thick,-,#3!80]
+\draw[arrow]
+		(0,0) coordinate -- (0,2) coordinate
+    node[pos=0.5,inner sep=0pt]{\textcolor{#3!80}{{\footnotesize $\wedge$}}};
+% \node[right] at (0.8,0.8) {\textcsthr{#3}};
+\end{tikzpicture}
+% \vspace{-20pt}
+\end{center}
+\end{textblock}
+}
+
+\newcommand{\vlinealg}[3]{%
+\begin{textblock}{1}(#1,#2)
+\begin{center}
+\begin{tikzpicture}
+\tikzstyle{arrow} = [thick,-,#3!80]
+\draw[arrow]
+		(0,0) coordinate -- (0,2) coordinate;
+% \node[right] at (0.8,0.8) {\textcsthr{#3}};
+\end{tikzpicture}
+% \vspace{-20pt}
+\end{center}
+\end{textblock}
+}
+
+\newcommand{\rightarrowalg}[3]{%
+\begin{textblock}{1}(#1,#2)
+\begin{center}
+\begin{tikzpicture}
+\tikzstyle{arrow} = [thick,-,#3!80]
+% \draw[double arrow=5pt] 
+\draw[arrow]
+		(5,0) coordinate -- (0,0) coordinate
+    node[pos=0.5]{\textcolor{#3!80}{{\footnotesize $>$}}};
+% \node[right] at (0.8,0.8) {\textcsthr{#3}};
+\end{tikzpicture}
+% \vspace{-20pt}
+\end{center}
+\end{textblock}
+}
+
+\newcommand{\leftarrowalg}[3]{%
+\begin{textblock}{1}(#1,#2)
+\begin{center}
+\begin{tikzpicture}
+\tikzstyle{arrow} = [thick,-,#3!80]
+% \draw[double arrow=5pt] 
+\draw[arrow]
+		(0,0) coordinate -- (5,0) coordinate
+    node[pos=0.5]{\textcolor{#3!80}{{\footnotesize $<$}}};
+% \node[right] at (0.8,0.8) {\textcsthr{#3}};
+\end{tikzpicture}
+% \vspace{-20pt}
+\end{center}
+\end{textblock}
+}
+
+\newcommand{\hlinealg}[3]{%
+\begin{textblock}{1}(#1,#2)
+\begin{center}
+\begin{tikzpicture}
+\tikzstyle{arrow} = [thick,-,#3!80]
+% \draw[double arrow=5pt] 
+\draw[arrow]
+		(0,0) coordinate -- (2,0) coordinate;
+% \node[right] at (0.8,0.8) {\textcsthr{#3}};
+\end{tikzpicture}
+% \vspace{-20pt}
+\end{center}
+\end{textblock}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% start poster %%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% !!!NOTE!!! %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% this is how textblock declarations work:
+%
+% \begin{textblock}{<boxwidth>}(<columnpos>,<rowpos>)
+%
+% where:
+% <boxwidth> 
+%    normally is one (i.e. one column, unless you want a 2 column wide block)
+% <columnpos> 
+%    0,1,2 maps to columns 1,2,3 (the x-co-ord of the textblock's top-left corner)
+% <rowpos> 
+%    a number 0-100 corresponding to the y-co-ord of the textblock's top-left corner
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \downarrowalg{0}{1}{\cstwo}
+% \rightarrowalg{0}{1}{\cstwo}
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% title/header band %%%%%%%%%%%%%%%%%%%
+
+
+
+\begin{textblock}{4}(0,-2.5)
+\color{\cstwo}{\rule{1.0\textwidth}{2mm}}
+\end{textblock}
+
+
+\begin{textblock}{4}(0,-1)
+\bfl
+{\Huge \color{\cstwo}{\textbf{Model building}}}
+\efl
+\end{textblock}
+
+\begin{textblock}{4}(0,3)
+ \color{\cstwo}{\rule{1.0\textwidth}{2mm}}
+\end{textblock}
+
+
+
+
+\begin{textblock}{1}(0,46)
+\color{\csone}{\rule{1.0\textwidth}{2mm}}
+\end{textblock}
+
+\begin{textblock}{1}(0,47.5)
+\bfl
+{\Huge \color{\csone}{\textbf{User side}}}
+\efl
+\end{textblock}
+    
+
+\begin{textblock}{1}(0,51.5)
+  \color{\csone}{\rule{1.0\textwidth}{2mm}}
+\end{textblock}
+
+
+
+
+
+\begin{textblock}{3}(1,46)
+  \color{\csthr}{\rule{1.0\textwidth}{2mm}}
+\end{textblock}
+  
+
+\begin{textblock}{3}(1,47.5)
+  \bfr
+  {\Huge \color{\csthr}{\textbf{Personalised optimisation}}}
+  \efr
+\end{textblock}
+
+
+\begin{textblock}{3}(1,51.5)
+   \color{\csthr}{\rule{1.0\textwidth}{2mm}}
+\end{textblock}
+  
+
+
+%%%%%%%%%%%%%%%%%%%%%%% text block %%%%%%%%%%%%%%%%%%%
+% \begin{textblock}{1}(0,15)
+
+% Words.
+
+% \end{textblock}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% text block %%%%%%%%%%%%%%%%%%%
+% \begin{textblock}{1}(0,20)
+
+%   \boxone{Text title in block style 1}{words in block style 1}{1}
+  
+% \end{textblock}
+
+% \quickboxtwo{0}{20}{1.3}{%
+% xxxxxxxx
+% }
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% text block %%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+\rightarrowalg{0.55}{6}{\cstwo}
+\rightarrowalg{1.55}{6}{\cstwo}
+\downarrowalg{0}{15}{\cstwo}
+\rightarrowalg{0.55}{18}{\cstwo}
+\rightarrowalg{1.55}{15}{\cstwo}
+\downarrowalg{2.5}{9}{\cstwo}
+\downarrowalg{2}{23}{\cstwo}
+\downarrowalg{0}{31}{\cstwo}
+\rightarrowalg{0.60}{35}{\cstwo}
+
+
+\rightarrowalg{2.7}{26}{\cstwo}
+\vlinealg{2.95}{26.7}{\cstwo}
+\leftarrowalg{2.7}{41}{\cstwo}
+\vlinealg{2.95}{38.23}{\cstwo}
+
+
+
+\quickboxtwo{0}{5}{1}{%
+Time-use variables ($D$ modifiable predictors)
+}
+
+\quickboxtwo{1}{5}{1}{%
+{Transform the time-use data into ilr coordinates \\[-7mm]$$\boldsymbol{z} = V^T \ln \left(\boldsymbol{x}  \right)$$\\[-20mm]}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%% arrow %%%%%%%%%%%%%%%%%%%
+% \rightarrowalg{0.6}{12}{2}{{\phantom{x}}}
+% \rightarrowalg{0}{21}{1}{ilr transform}
+
+\quickboxtwo{2}{5}{1.4}{%
+{Multivariate scale ("whiten") $\textit{ilr}$ coordinates $\boldsymbol{z}$ using\\[-4mm]
+$$\boldsymbol{z}^{(s)} = \left( \boldsymbol{z} - \hat{\boldsymbol{\mu}_z} \right)^T \hat{\Sigma}_z^{-1/2}$$\\[-20mm]}
+}
+
+
+
+\quickboxtwo{0}{12}{1}{%
+Other covariates (other participant predictors)
+}
+
+\quickboxtwo{0}{18}{1}{%
+Re-parameterise categorical variables as contrast indicators/"one-hot-coded" w.r.t. to a reference level
+}
+
+\quickboxtwo{1}{13.5}{1}{%
+{Multivariate scale each covariate group-wise to create block-wise, main-effect design matricies\\[-4mm]
+$$\boldsymbol{w}^{(s)} = \left( \boldsymbol{w} - \hat{\boldsymbol{\mu}}_{w} \right)^T \hat{\Sigma}_{w}^{-1/2}$$\\[-20mm]}
+}
+
+
+\quickboxtwo{2.0}{12.5}{1.4}{%
+Create all two way interactions as well as squared polynomial terms (for continuous variables only) for the set of multidimensional scaled ilr-coordinates and other group/block-wise scaled predictor variables. Resulting in the group-wise set of predictor matricies
+$X^{(g)}$,  $g=1,2,...,G$; where $G$ is the total number of variable groups (interaction/polynomial blocks are seperate predictor groups to main effects)
+}
+
+
+
+\quickboxtwo{0}{26}{0.97}{
+  Cognative variables (outcomes)\\[-7mm]
+  $$\boldsymbol{y}_1, \hdots, \boldsymbol{y}_5$$\\[-20mm]
+}
+
+\quickboxtwo{0}{34}{0.97}{
+  Univariate scale cognative response variables \\[-7mm]
+  $$\boldsymbol{y}^{(s)}_1, \hdots, \boldsymbol{y}^{(s)}_5$$\\[-20mm]
+}
+
+
+\quickboxtwo{1.2}{26}{1.4}{%
+Fit Group Lasso model for each scaled cognitive outcome (response variable) $\boldsymbol{y}_{r}^{(s)}, \;\; r=1,2,\hdots,5$:
+$$
+\boldsymbol{\beta}_r^{\ast} = 
+\operatorname*{argmin}_{\boldsymbol{\beta}_r}
+\bigg| \bigg| 
+\boldsymbol{y}_{r}^{(s)} - \sum_{g=1}^{G} X^{(g)} \boldsymbol{\beta}_r^{(g)} 
+\bigg| \bigg|_2^{2} + 
+\lambda_r \sum_{g=1}^{G} 
+\sqrt{{\nu}_g} 
+\big| \big| \boldsymbol{\beta}_r^{(g)} \big| \big|_2 
+$$
+That is, find the regularised/penalised coefficients $\boldsymbol{\beta}_r^{\ast}$ for each response variable block-wise over the scaled main, interaction and polynomial (order 2, continuous only) predictors
+}
+
+
+\quickboxtwo{3}{28}{0.85}{%
+Minimise 10-fold cross-validation prediction error over grid of group lasso penaltys to find optimised $\lambda_r^{\ast}$ for each response variable $r$
+}
+
+
+
+
+
+
+\downarrowalg{0}{60.3}{\csone}
+\vlinealg{0}{66}{\csone}
+\vlinealg{0}{69.5}{\csone}
+\vlinealg{0}{73}{\csone}
+\vlinealg{0}{76.5}{\csone}
+\hlinealg{0.0985}{80.09}{\csone}
+\rightarrowalg{0.45}{79.355}{\csone}
+\rightarrowalg{0.51}{64.3}{\csone}
+
+
+
+
+
+
+\quickboxone{0}{57}{0.95}{%
+Specify response $r$ of interest
+}
+
+
+% \quickboxone{0}{60}{0.95}{%
+% Enter current time-use \\[-4mm]
+% $$\boldsymbol{x}_{(c)}$$\\[-20mm]
+% }
+
+
+
+\quickboxone{0}{64}{0.95}{%
+Enter demographic info
+}
+
+
+
+
+
+\uparrowalg{1}{61}{\csthr}
+\rightarrowalg{1.54}{58.3}{\csthr}
+\downarrowalg{2.5}{66}{\csthr}
+\rightarrowalg{2.05}{72}{\csthr}
+\downarrowalg{2.5}{77}{\csthr}
+\downarrowalg{3}{83}{\csthr}
+\leftarrowalg{2.54}{89}{\csthr}
+\leftarrowalg{1.54}{89}{\csthr}
+\leftarrowalg{0.5}{89}{\csthr}
+
+
+
+
+
+\quickboxthr{1}{64}{0.9}{%
+Person specific strata $k$ can be deduced
+% }
+% \quickboxthr{4.15}{27}{0.9}{%
+from the $2^3$=$8$ strata defined by tuples of dichotimised categories (age${}_{<75}$, sex, BMI${}_{<30}$)
+}
+
+
+
+
+
+\quickboxthr{1}{54}{1}{%
+Calculate the sample ($\textit{ilr}$-transformed) mean vector and covariance matrix of the $k^{\text{th}}$ strata, $\hat{\boldsymbol{\mu}}_{k}$ and $\hat{\Sigma}_{k}$, respectively 
+}
+
+
+\quickboxthr{2}{54}{1.42}{%
+Estimate the surface ("fence") of an ellipsoid (3D generalisation of an ellipse in $D - 1 = 3$-dimensional Euclidean $\textit{ilr}$-space) that captures the 80\% highest density of the $\textit{ilr}$-transformed time-use values specific to the strata
+\bit
+\item
+The fence is calculated assuming a 3-variate Gaussian distribution with points $\boldsymbol{z}^{*}$ that satisfy:
+{\\[-4mm]$$
+\left( \boldsymbol{z}^{*} - \hat{\boldsymbol{\mu}}_{k} \right)^T \hat{\Sigma}_{k}^{-1} \left( \boldsymbol{z}^{*} - \hat{\boldsymbol{\mu}}_k  \right)
+\leq 4.641628
+$$\\[-20mm]}
+\eit
+}
+
+
+
+
+
+
+
+
+\quickboxthr{1.77}{69}{0.83}{%
+Generate grid of 5-min spaced time-use compositions within strata $k$'s contrained space
+}
+
+\quickboxthr{2.5}{69}{1.215}{%
+{Create exhaustive 5-min spaced grid with points $\boldsymbol{x}_{(\#)}$: ilr transform and only keep those within the ellipsoid %\\[-10mm]
+%$$
+$\boldsymbol{z}_{(\#)} = V^T \ln \left(\boldsymbol{x}_{(\#)} \right)$
+%$$\\[-10mm] 
+and then multivariate scale as before to create $\boldsymbol{z}_{(\#)}^{(s)}$
+% \\[-4mm]
+% $$\boldsymbol{z}_{(\#)}^{(s)} = \left( \boldsymbol{z}_{(\#)} - \hat{\boldsymbol{\mu}}_{z} \right)^T \hat{\Sigma}_{z}^{-1/2}$$
+% \\[-20mm]
+}
+}
+
+\quickboxthr{1}{80}{1.75}{%
+Create all scaled main effects, two way interactions as well as squared polynomial terms like before using the personalised user predictors as covariates with the ilr grid points
+}
+
+\quickboxthr{3}{87}{0.95}{%
+Make predictions for response $r$ from Lasso model ($\boldsymbol{\beta}_r^{\ast}$) over all constrained grid points
+}
+
+\quickboxthr{2}{87}{1.0}{%
+Extract top 5\% of grid predctions and average associated ilrs to create the optimal ilr coords, $\boldsymbol{z}_{(opt)}^{(s)}$
+}
+
+\quickboxthr{1}{87}{1.0}{%
+Reverse transform ilr scaling on the optimal ilr and then inverse ilr tranform back to time-use composition scale, $\boldsymbol{x}_{(opt)}$
+}
+
+
+\quickboxone{0}{87}{0.95}{%
+Report associated optimal time-use composition $\boldsymbol{x}_{(opt)}$ to the user
+}
+
+% \quickboxone{3.9}{88}{1.02}{%
+% {Transform compositions to ilr coordinates \\[-10mm]$$\boldsymbol{z}_{(c)} = V^T \ln \left\{\boldsymbol{x}_{(c)}  \right\}$$\\[-10mm] and then scale using strata specific sample ilr mean and covariance \\[-4mm]$$\boldsymbol{z}_{(c)}^{(s)} = \left( \boldsymbol{z}_{(c)} - \hat{\boldsymbol{\mu}}_{k} \right)^T \hat{\Sigma}_{k}^{-1/2}$$\\[-20mm]}
+% }
+
+
+%%%%%%%%%%%%%%%%%%%%%%% text block %%%%%%%%%%%%%%%%%%%
+% \begin{textblock}{1}(0,42)
+
+% \boxtwo{Text title in block style 2}{words in block style 2}{1.5}
+
+% \Head{Words }
+
+% Words. 
+
+% \end{textblock}
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%% text block %%%%%%%%%%%%%%%%%%%
+% \begin{textblock}{1}(1,62)
+
+% Words.
+% \bit
+% \item item one
+% \item item two
+% \eit
+
+% \end{textblock}
+
+
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%% text block %%%%%%%%%%%%%%%%%%%
+% \begin{textblock}{1}(1,52)
+
+% \Subhead{Text}
+
+% Words
+
+% \end{textblock}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%% text block %%%%%%%%%%%%%%%%%%%
+% \begin{textblock}{1}(1,79)
+
+% \Head{Words}
+
+% Words
+
+% \end{textblock}
+
+
+
+
+
+
+
+
+
+%\begin{textblock}{1}(2,10)
+%%\bibliographystyle{plain}
+%\bibliographystyle{ieeetr}
+%\bibliography{bib/bibliography.bib}
+%\end{textblock}
+
+
+\end{document}
