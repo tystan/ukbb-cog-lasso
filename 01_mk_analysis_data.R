@@ -11,7 +11,7 @@ library("robCompositions")
 library("zCompositions")
 library("codaredistlm")
 
-# tidyverse and adjascent
+# tidyverse and adjacent
 library("dplyr")
 library("tidyr")
 library("readr")
