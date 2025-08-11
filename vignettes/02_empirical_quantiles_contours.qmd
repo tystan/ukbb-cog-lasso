@@ -1,0 +1,414 @@
+---
+title: "`Vignette 02:`"
+subtitle: "Example creation of *ellipsoid fencing* on sampled data"
+author: "Ty Stanford, Maddison Mellow, et al."
+format:
+  pdf:
+    toc: true
+    toc-depth: 3
+    papersize: a4
+    highlight-style: atom-one-dark-edit.theme
+    number-sections: true
+urlcolor: orange
+---
+
+<!-- date: "`r format(Sys.time(), '%d %b %Y')`" -->
+<!-- monofont: "Roboto Mono" -->
+
+```{r setup, include=FALSE}
+options(width = 90)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = "#>")
+
+old_warn <- getOption("warn")
+options(warn = -1)
+```
+
+\newpage
+
+# Example data: Faircough et al. (2017)
+
+We will use the freely available [Fairclough (2017) data](https://doi.org/10.1186/s12966-017-0521-z)\footnote{Fairclough et al. Fitness, fatness and the reallocation of time between children’s daily movement behaviours: an analysis of compositional data. International Journal of Behavioral Nutrition and Physical Activity, 2017. 14(1): 64.} that is available in the `codaredistlm` \textsf{R} package.
+
+The data at a glance:
+
+* Examining children’s daily movement behaviours and adiposity measures
+* Year 5 children from a low-income community in northwest England 
+* Children’s daily movement behaviours captured are: sleep, sedentary behaviour (sed), light/moderate/vigorous physical activity (which we combine for clarity of example)
+* $n=169$
+
+
+# Other resources and work-throughs
+
+Also please note other more detailed and higher dimensional work-through are available in the supplementary material of [Nikfarjam et al. (2024) data](https://doi.org/10.1145/3638529.3654085)\footnote{Adel Nikfarjam et al. (2024). Quality Diversity Approaches for Time-Use Optimisation to Improve Health Outcomes. In Proceedings of the Genetic and Evolutionary Computation Conference (GECCO '24). Association for Computing Machinery, New York, NY, USA, 1318–1326. https://doi.org/10.1145/3638529.3654085}
+
+* [Direct link to downloadable supp material `ppap447_Nikfarjam_suppl.zip`](https://dl.acm.org/doi/suppl/10.1145/3638529.3654085/suppl_file/ppap447_Nikfarjam_suppl.zip)
+
+\newpage
+
+# Data loading and wrangling
+
+
+## Set up R Session
+
+```{r}
+
+# ---- libs -----
+
+suppressPackageStartupMessages({
+  library("simplexity") # see https://github.com/tystan/simplexity
+  library("compositions")
+  library("codaredistlm")
+  
+  library("knitr")
+  library("dplyr")
+  library("tidyr")
+})
+
+
+# ---- constants -----
+
+timeuse_labs <- c("sleep", "sed", "pa")
+D <- length(timeuse_labs)
+(ilr_labs <- paste0("ilr", 1:(D - 1)))
+
+# ---- load_data ----
+
+# load some real data
+data("fairclough", package = "codaredistlm")
+
+fairclough_example <- 
+  fairclough %>% 
+  as_tibble(.) %>% 
+  mutate(pa = lpa + mpa + vpa) %>% 
+  select(sleep, sed, pa)
+
+
+kable(head(fairclough_example))
+
+
+```
+
+
+\newpage
+
+## Time use variables and isometric log-ratio (*ilr*) creation
+
+We have $n=169$ observed time-use compositions in the example data, $\boldsymbol{x}_i$ for $i = 1, 2, \ldots, n$, where:
+$$
+\boldsymbol{x}_i = 
+\begin{bmatrix} x_{i1}  \\ x_{i2}  \\ x_{i3} \end{bmatrix}= 
+\begin{bmatrix} x_{i,sleep}  \\ x_{i,sed}  \\ x_{i,pa} \end{bmatrix}.
+$$
+
+We will assume\footnote{we will check this later} that when we log-ratio (*ilr*) transform the compositional data these observations are taken from the *Gaussian distribution*. This means the corresponding *ilr*s,
+$$
+\boldsymbol{z}_i = 
+\begin{bmatrix} z_{i1}  \\ z_{i2}   \end{bmatrix},
+$$
+are 2-dimensional/variate Gaussian distributed, written:
+$$
+\boldsymbol{Z}_i \sim \mathcal{N}_2(  \boldsymbol{\mu}_z , \Sigma_z).
+$$
+
+
+Now let's create the ilr transformation (with our orthogonal basis matrix of choice)
+
+```{r}
+
+# ---- create_ilrs -----
+
+
+
+# this creates a normalised one-vs-rest squential binary 
+# partition for ilr() transformation
+(sbp3_b0 <-
+  matrix(
+    c(
+      +1,  0,
+      -1, +1,
+      -1, -1
+    ),
+    byrow = TRUE,
+    ncol = 2,
+    dimnames = list(timeuse_labs, ilr_labs)
+  ))
+(psi3_b0 <- compositions::gsi.buildilrBase(sbp3_b0))
+
+
+ilr_dat <- ilr(fairclough_example, V = psi3_b0)
+head(ilr_dat)
+
+ilr_dat <- as.matrix(as.data.frame(ilr_dat))
+str(ilr_dat)
+
+
+```
+
+
+\newpage
+
+# Ellipsoid fencing
+
+Any observation $\boldsymbol{z} \in {R}^{D-1}$ can be evaluated to determine whether it is within the $100 {\times} p^{th}$ percentile (i.e., a probability/proportion) contour of a multivariate normal distribution through the following inequality:
+
+$$
+\left( \boldsymbol{z} - \boldsymbol{\mu}_z \right)^T \Sigma_z^{-1} \left( \boldsymbol{z} - \boldsymbol{\mu}_z  \right)
+\leq \chi^2_{D-1}(p)
+$$
+
+where $\chi^2_{D-1}(p)$ is the $100 {\times} p^{th}$ percentile of the Chi squared distribution with $D-1$ degrees of freedom. Note $D=3$ and therefore $D-1 = 2$ in this case.
+
+Let's use $p=0.8$ - that is - we expect roughly 80\% of sampled values to lie within the associated contour and 20\% outside of it. Therefore the RHS of the above inequality can be written:
+
+$$
+\left( \boldsymbol{z} - \boldsymbol{\mu}_z \right)^T \Sigma_z^{-1} \left( \boldsymbol{z} - \boldsymbol{\mu}_z  \right)
+\leq 3.218876
+$$
+as 
+$\chi^2_{2}(0.8) =$ `r qchisq(0.8, df = 2)`.
+
+
+As we do not know the true values of $\boldsymbol{\mu}_z$ and $\Sigma_z$ we can estimate them as $\hat{\boldsymbol{\mu}}_z$ and $\hat{\Sigma}_z$, respectively, from the $n=169$ sampled ilr values.
+
+\newpage
+
+## Estimated mean vector and var-covariance matrix
+
+
+Here are the estimated quantities below:
+
+
+```{r}
+
+(m_ilr <- colMeans(ilr_dat))
+(v_ilr <- var(ilr_dat))
+
+
+
+```
+
+That is, written out:
+
+
+$$
+\hat{\boldsymbol{\mu}}_z = 
+\begin{bmatrix}0.1747 \\0.2002  \end{bmatrix},
+$$
+$$
+\hat{\Sigma}_z = 
+\begin{bmatrix}
+0.0076 &0.0026 \\
+ 0.0026 & 0.0512
+\end{bmatrix}, 
+$$
+and therefore using the below R output,
+
+```{r}
+
+solve(v_ilr)
+
+
+```
+
+we have
+
+$$
+\hat{\Sigma}^{-1}_z = 
+\begin{bmatrix}
+ 133.41 &-6.82 \\
+  -6.82 & 19.86
+\end{bmatrix}, 
+$$
+
+
+
+
+Therefore the inequality below only has one unknown in $\boldsymbol{z}$ which can be input to see if it *satisfies the inequality* or *not*.
+$$
+\left( \boldsymbol{z} - \hat{\boldsymbol{\mu}}_z \right)^T \hat{\Sigma}_z^{-1} \left( \boldsymbol{z} - \hat{\boldsymbol{\mu}}_z  \right)
+\leq 3.218876
+$$
+
+
+
+\newpage
+
+
+# Inside or outside ellipsoid fencing calculations
+
+Using the `get_inequality_value()` function defined below, we can either calculate the LHS of the inequality (to compare to the threshold value) or directly calculate the percentile contour that point lies on (usage: `get_inequality_value(..., as_percentile = TRUE)`).
+
+```{r}
+
+# see: ?stats::mahalanobis
+get_inequality_value <- function(dat, mean_vec, covar_mat, as_percentile = FALSE) {
+  mdist <- mahalanobis(x = dat, center = mean_vec, cov = covar_mat)
+  if (as_percentile) {
+    return(100 * pchisq(mdist, df = ncol(covar_mat)))
+  } else {
+    return(mdist)
+  }
+}
+
+
+ilr_df <-
+  as_tibble(fairclough_example) %>%
+  bind_cols(., ilr_dat) %>%
+  mutate(
+    lhs_ineq = get_inequality_value(
+      ilr_dat, 
+      mean_vec = m_ilr, 
+      covar_mat = v_ilr, 
+      as_percentile = FALSE
+    ),
+    perc_from_mean = get_inequality_value(
+      ilr_dat, 
+      mean_vec = m_ilr, 
+      covar_mat = v_ilr, 
+      as_percentile = TRUE
+    )
+  )
+
+# print out first 10 rows
+kable(ilr_df[1:10,], digits = c(1, 1, 1, 3, 3, 1, 1))
+
+
+
+```
+
+
+
+\clearpage
+\newpage
+
+## Estimated contours on sampled data
+
+
+Let's examine the estimated 80% fencing boundary.
+
+### Fencing for sample ilr data
+
+Calculate point's inclusion or exclusion of the fence boundary:
+
+```{r}
+fence_p <- 80
+ilr_df$ellipsoid_80_fence <- 
+  if_else(
+    ilr_df$perc_from_mean < fence_p, 
+    "inside fence", 
+    "outside fence"
+  )
+ilr_df$ellipsoid_80_fence <- 
+  factor(ilr_df$ellipsoid_80_fence)
+
+col_pal <- add_alpha(c("dodgerblue", "orange"), 0.3)
+col_vec <- 
+  if_else(
+    ilr_df$ellipsoid_80_fence == "inside fence", 
+    col_pal[1], 
+    col_pal[2]
+  )
+
+
+head(ilr_df)
+```
+
+
+Figure 1 below shows the sampled points (ilr transformed) inside and outside the 80% ellipsoid fencing. We can see approximately 80\% of points are within the estimated  80\% contour of the Gaussian distribution on the simplex.
+
+
+
+::: {#fig-1}
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+#| out-width: 10cm
+
+
+plot(ilr_df[, ilr_labs], col = col_vec, pch = 16, bty = "n")
+
+# add the mean ilr as black plus sign
+points(m_ilr[1], m_ilr[2], pch = "+", cex = 3)
+
+```
+
+$n=169$ compositions transformed to ilrs $(z_1,z_2)$. Points are coloured blue if within the estimated 80% contour and orange if outside it.
+
+:::
+
+\clearpage
+\newpage
+
+
+### Fencing for sample compositional data
+
+
+From Figure 2, we see the compositions back-transformed to the simplex with their fencing categorisation.
+
+
+::: {#fig-2}
+
+```{r}
+#| fig-width: 6
+#| fig-height: 6
+#| out-width: 10cm
+
+
+plot(acomp(ilr_df[, timeuse_labs]), col = col_vec,pch = 16)
+
+
+```
+
+$n=169$ points of $(x1,x2,x3)$=(sleep,sed,pa) sampled compositions. Points are coloured blue if within the estimated 80% contour and orange if outside it.
+
+:::
+
+
+\clearpage
+\newpage
+
+
+## Examine normality assumption: quantile plot
+
+
+We need to check that the previously estimated contours are appropriate for the sampled data. We can do this empirically. 
+
+
+Figure 3 shows the actual percentiles observed in the data, under the assumption of being from a
+$$
+\boldsymbol{Z} \sim \mathcal{N}_2(  \hat{\boldsymbol{\mu}}_z , \hat{\Sigma}_z).
+$$
+distribution where $\hat{\boldsymbol{\mu}}_z$ and $\hat{\Sigma}_z$ are given above. Figure 3 shows that there is a slightly larger density of observed points in each contour than what is theoretically expected. However this difference is slight and the assumption of multivariate normality is reasonable.
+
+::: {#fig-3}
+
+```{r}
+#| out-width: 10cm
+
+percentiles <- seq(5, 95, by = 5)
+(obs_perc <- sapply(percentiles, function(x) 100 * mean(ilr_df$perc_from_mean <= x)))
+plot(
+  0:100, 0:100, 
+  type = "n", bty = "n", 
+  xlab = "Theoretical CDF percentiles", 
+  ylab = "Actual CDF percentiles"
+)
+points(percentiles, obs_perc, type = "p", pch = 16, col = "magenta")
+abline(a = 0, b = 1)
+
+
+```
+
+Proportion of sample points within the $p$th quantile contour ($f(z)\leq \chi^2_2(p)$) for the estimated Gaussian distribution for $p=0.05, 0.10, ..., 0.95$
+
+:::
+
+
+```{r}
+#| include: false
+
+options(warn = old_warn)
+```
+
