@@ -662,16 +662,17 @@ $$\\[-20mm]}
 
 
 
-\quickboxthr{1.77}{69}{0.83}{%
-Generate grid of 5-min spaced time-use compositions within strata $k$'s contrained space
+\quickboxthr{1.77}{69}{0.86}{%
+% Generate grid of 5-min spaced time-use compositions within strata $k$'s contrained space
+Generate exhaustive grid of all possible 5-min spaced time-use compositions in 24-hours and ilr transform
 }
 
-\quickboxthr{2.5}{69}{1.215}{%
-{Create exhaustive 5-min spaced grid with points $\boldsymbol{x}_{(\#)}$: ilr transform and only keep those within the ellipsoid %\\[-10mm]
+\quickboxthr{2.55}{69}{1.192}{%
+{Restrict ilr transformed exhaustive grid to only points $\boldsymbol{z}_{(\#)}$ that lie within strata $k$'s distributional ellipsoid "fence" %\\[-10mm]
 %$$
-$\boldsymbol{z}_{(\#)} = V^T \ln \left(\boldsymbol{x}_{(\#)} \right)$
+% $\boldsymbol{z}_{(\#)} = V^T \ln \left(\boldsymbol{x}_{(\#)} \right)$
 %$$\\[-10mm] 
-and then multivariate scale as before to create $\boldsymbol{z}_{(\#)}^{(s)}$
+and then multivariate scale these values as before to create $\boldsymbol{z}_{(\#)}^{(s)}$
 % \\[-4mm]
 % $$\boldsymbol{z}_{(\#)}^{(s)} = \left( \boldsymbol{z}_{(\#)} - \hat{\boldsymbol{\mu}}_{z} \right)^T \hat{\Sigma}_{z}^{-1/2}$$
 % \\[-20mm]

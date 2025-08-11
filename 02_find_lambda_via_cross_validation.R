@@ -212,14 +212,18 @@ str(mod_df$grp_lasso_obj[[1]])
 mod_df$grp_lasso_obj[[3]]$lambda.min
 
 
-# find optimal lambdaz valuez that minimizez tezt MSE
+
+# find optimal lambdaz valuez that minimizes test MSE
+# R^2 values over lambdaz valuez too
 pdf("fig/grplasso_cv_error_5_outc.pdf", width = 10, height = 12)
-  par(mfrow = c(3, 2))
-  for (i in seq_along(mod_df$grp_lasso_obj)) {
-    plot(mod_df$grp_lasso_obj[[i]], sub = mod_df$mod[i])
-  }
-  par(mfrow = c(1, 1))
+par(mfrow = c(5, 2))
+for (i in seq_along(mod_df$grp_lasso_obj)) {
+  plot(mod_df$grp_lasso_obj[[i]], sub = mod_df$mod[i])
+  plot(mod_df$grp_lasso_obj[[i]], sub = mod_df$mod[i], type = "rsq")
+}
+par(mfrow = c(1, 1))
 dev.off()
+
 
 
 
@@ -246,9 +250,8 @@ mod_df <-
 
 mod_df
 
-plt_mod_df <-
+mod_df <-
   mod_df %>%
-  select(mod, cv_df )%>%
   mutate(
     mod = 
       case_when(
@@ -260,9 +263,57 @@ plt_mod_df <-
         TRUE               ~ "ERROR!!"
       ),
     mod = fct_inorder(mod)
-  ) %>%
-  unnest(cols = cv_df)
+  ) 
   
+plt_mod_df <-
+  mod_df %>%
+  select(mod, cv_df)  %>%
+  unnest(cols = cv_df)
+
+
+plt_mod_df2 <-
+  mod_df %>%
+  select(mod, grp_lasso_obj  )%>%
+  mutate(summ_stats_obj = map(.x = grp_lasso_obj, .f = summary))
+
+glimpse(plt_mod_df2$summ_stats_obj[[1]])
+
+get_summ_stats_tib <- function(grp_lasso_summary_obj) {
+  min_ii <- grp_lasso_summary_obj$min
+  tibble(
+    min_lambda = grp_lasso_summary_obj$lambda[min_ii],
+    min_ln_lambda = log(grp_lasso_summary_obj$lambda[min_ii]),
+    cve = grp_lasso_summary_obj$cve[min_ii],
+    r2 = grp_lasso_summary_obj$r.squared[min_ii],
+    sigma = grp_lasso_summary_obj$sigma[min_ii],
+    snr = grp_lasso_summary_obj$snr[min_ii],
+    ngroups = grp_lasso_summary_obj$ngroups[min_ii],
+    nvars = grp_lasso_summary_obj$nvars[min_ii],
+    max_cve = max(grp_lasso_summary_obj$cve),
+    first_ln_lam = log(min(grp_lasso_summary_obj$lambda))
+  )
+}
+
+plt_mod_df2 <-
+  plt_mod_df2 %>% 
+  mutate(summ_stats = map(.x = summ_stats_obj, .f = get_summ_stats_tib)) %>% 
+  select(mod, summ_stats  )%>%
+  unnest(cols = summ_stats)
+
+plt_mod_df2 %>% 
+  select(-max_cve, -first_ln_lam) %>% 
+  knitr::kable(., digits = c(0, 4, 1, 3, 3, 3, 3, 0, 0))
+
+# |mod                | min_lambda| min_ln_lambda|   cve|    r2| sigma|   snr| ngroups| nvars|
+# |:------------------|----------:|-------------:|-----:|-----:|-----:|-----:|-------:|-----:|
+# |Global cognition   |     0.0022|          -6.1| 0.882| 0.118| 0.939| 0.134|      76|   279|
+# |Memory             |     0.0054|          -5.2| 0.952| 0.048| 0.976| 0.050|      41|   128|
+# |Processing speed   |     0.0030|          -5.8| 0.871| 0.129| 0.933| 0.148|      67|   240|
+# |Executive function |     0.0036|          -5.6| 0.798| 0.202| 0.893| 0.254|      56|   193|
+# |Reasoning          |     0.0025|          -6.0| 0.851| 0.149| 0.922| 0.175|      63|   239|
+
+
+
 
 plt_mod_df  %>%
   # pivot_longer(
@@ -286,6 +337,18 @@ plt_mod_df  %>%
     col = NA
   ) +
   # scale_y_log10() + 
+  geom_label(
+    data = plt_mod_df2,
+    aes(
+      x = min_ln_lambda, 
+      y = max_cve, 
+      col = mod, 
+      label = sprintf("R^2  ==  %01.3f", r2)
+    ),
+    parse = TRUE,
+    inherit.aes = FALSE,
+    show.legend = FALSE
+  ) +
   theme_bw() +
   scale_colour_tableau()  +
   scale_fill_tableau() +
