@@ -531,25 +531,25 @@ Re-parameterise categorical variables as contrast indicators/"one-hot-coded" w.r
 }
 
 \quickboxtwo{1}{13.5}{1}{%
-{Multivariate scale each covariate group-wise to create block-wise, main-effect design matricies\\[-4mm]
+{Multivariate scale each covariate group-wise to create block-wise, main-effect design matrices\\[-4mm]
 $$\boldsymbol{w}^{(s)} = \left( \boldsymbol{w} - \hat{\boldsymbol{\mu}}_{w} \right)^T \hat{\Sigma}_{w}^{-1/2}$$\\[-20mm]}
 }
 
 
 \quickboxtwo{2.0}{12.5}{1.4}{%
-Create all two way interactions as well as squared polynomial terms (for continuous variables only) for the set of multidimensional scaled ilr-coordinates and other group/block-wise scaled predictor variables. Resulting in the group-wise set of predictor matricies
-$X^{(g)}$,  $g=1,2,...,G$; where $G$ is the total number of variable groups (interaction/polynomial blocks are seperate predictor groups to main effects)
+Create all two way interactions as well as squared polynomial terms (for continuous variables only) for the set of multidimensional scaled ilr-coordinates and other group/block-wise scaled predictor variables. Resulting in the group-wise set of predictor matrices
+$X^{(g)}$,  $g=1,2,...,G$; where $G$ is the total number of variable groups (interaction/polynomial blocks are separate predictor groups to main effects)
 }
 
 
 
 \quickboxtwo{0}{26}{0.97}{
-  Cognative variables (outcomes)\\[-7mm]
+  Cognitive variables (outcomes)\\[-7mm]
   $$\boldsymbol{y}_1, \hdots, \boldsymbol{y}_5$$\\[-20mm]
 }
 
 \quickboxtwo{0}{34}{0.97}{
-  Univariate scale cognative response variables \\[-7mm]
+  Univariate scale cognitive response variables \\[-7mm]
   $$\boldsymbol{y}^{(s)}_1, \hdots, \boldsymbol{y}^{(s)}_5$$\\[-20mm]
 }
 
@@ -571,7 +571,7 @@ That is, find the regularised/penalised coefficients $\boldsymbol{\beta}_r^{\ast
 
 
 \quickboxtwo{3}{28}{0.85}{%
-Minimise 10-fold cross-validation prediction error over grid of group lasso penaltys to find optimised $\lambda_r^{\ast}$ for each response variable $r$
+Minimise 10-fold cross-validation prediction error over grid of group lasso penalties to find optimised $\lambda_r^{\ast}$ for each response variable $r$
 }
 
 
@@ -631,7 +631,7 @@ Enter demographic info
 Person specific strata $k$ can be deduced
 % }
 % \quickboxthr{4.15}{27}{0.9}{%
-from the $2^3$=$8$ strata defined by tuples of dichotimised categories (age${}_{<75}$, sex, BMI${}_{<30}$)
+from the $2^3$=$8$ strata defined by tuples of dichotomised categories (age${}_{<75}$, sex, BMI${}_{<30}$)
 }
 
 
@@ -663,7 +663,7 @@ $$\\[-20mm]}
 
 
 \quickboxthr{1.77}{69}{0.86}{%
-% Generate grid of 5-min spaced time-use compositions within strata $k$'s contrained space
+% Generate grid of 5-min spaced time-use compositions within strata $k$'s constrained space
 Generate exhaustive grid of all possible 5-min spaced time-use compositions in 24-hours and ilr transform
 }
 
@@ -688,11 +688,11 @@ Make predictions for response $r$ from Lasso model ($\boldsymbol{\beta}_r^{\ast}
 }
 
 \quickboxthr{2}{87}{1.0}{%
-Extract top 5\% of grid predctions and average associated ilrs to create the optimal ilr coords, $\boldsymbol{z}_{(opt)}^{(s)}$
+Extract top 5\% of grid predictions and average associated ilrs to create the optimal ilr coords, $\boldsymbol{z}_{(opt)}^{(s)}$
 }
 
 \quickboxthr{1}{87}{1.0}{%
-Reverse transform ilr scaling on the optimal ilr and then inverse ilr tranform back to time-use composition scale, $\boldsymbol{x}_{(opt)}$
+Reverse transform ilr scaling on the optimal ilr and then inverse ilr transform back to time-use composition scale, $\boldsymbol{x}_{(opt)}$
 }
 
 
