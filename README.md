@@ -8,8 +8,8 @@ Please see the below papers for more details and context:
 
 * "['Small Steps' towards improving 24-hour time-use behaviours to decrease the risk of
 dementia: protocol for a personalised, web-based randomised controlled trial in community-
-dwelling older adults](https://doi.org/10.1101/2025.05.26.25328336)". Mellow et al. (2025). *Submitted/under review (link to pre-print).*
-* "[An interactive tool to personalise 24-hour activity, sitting and sleep prescription for optimal health outcomes](https://doi.to.follow/)". Mellow et al. (2025). *Submitted/under review (updated link to following publication).*
+dwelling older adults](https://doi.org/10.1101/2025.05.26.25328336)". Mellow et al. (2025). *Submitted/under review (link to preprint v1 at medRxiv).*
+* "[An interactive tool to personalise 24-hour activity, sitting and sleep prescription for optimal health outcomes](https://doi.org/10.21203/rs.3.rs-6897341/v1)". Mellow et al. (2025). *Under review (link is to preprint v1 available at Research Square).*
 
 ## Workflow
 
