@@ -6,10 +6,8 @@ An analysis pipeline to provide personalised time-use suggestions, via *group LA
 
 Please see the below papers for more details and context:
 
-* "['Small Steps' towards improving 24-hour time-use behaviours to decrease the risk of
-dementia: protocol for a personalised, web-based randomised controlled trial in community-
-dwelling older adults](https://doi.org/10.1101/2025.05.26.25328336)". Mellow et al. (2025). *Submitted/under review (link to preprint v1 at medRxiv).*
-* "[An interactive tool to personalise 24-hour activity, sitting and sleep prescription for optimal health outcomes](https://doi.org/10.21203/rs.3.rs-6897341/v1)". Mellow et al. (2025). *Under review (link is to preprint v1 available at Research Square).*
+* "[An interactive tool to personalise 24-hour activity, sitting and sleep prescription for optimal health outcomes](https://doi.org/10.1038/s41746-026-02542-4)". Mellow et al. (2025). *npj Digit. Med.*
+* "['Small Steps' towards improving 24-hour time-use behaviours to decrease the risk of dementia: protocol for a personalised, web-based randomised controlled trial in community-dwelling older adults](https://doi.org/10.1136/bmjopen-2025-105643)". Mellow et al. (2025). *BMJ Open.*
 
 ## Workflow
 
